@@ -1,9 +1,9 @@
 pipeline {
-    agent { // where to execute
+    agent any
+        // { // where to execute
         // docker { 
         //     image 'vivado:2018.3'            
         // }
-        any
     }
     stages { // where the work happens
         stage('Checkout') {
