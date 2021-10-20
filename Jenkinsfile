@@ -1,31 +1,32 @@
 pipeline {
+    // Agent: where to execute, useful in jenkins clusters where you have different machines/agents to run a job
     agent any
-        // { // where to execute
+        // {
         // docker { 
         //     image 'vivado:2018.3'            
         // }
-    stages { // where the work happens
+    stages { // where the work happens, like makefile targets
         stage('Checkout') {
             steps { 
                 // checkout scm
-                echo "Checkout"
+                echo "Checkout..."
             }
         }
         stage('Build') {
             steps {
-                echo "Build"
+                echo "Build..."
             }
         }
 
         stage('Test') {
             steps {
-                echo "Test"
+                echo "Test..."
             }
         }
 
         stage('Deploy') {
             steps {
-                echo "Deploy"
+                echo "Deploy..."
             }
         }
     }

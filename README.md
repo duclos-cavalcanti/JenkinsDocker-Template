@@ -42,4 +42,10 @@ Example Regex
 .*dev|.*feature
 ```
 
+### Pipeline Syntax
+* Scripted
+    First syntax, uses groovy engine, nodes are scripted through groovy script. It has
+    advanced capabilities, vaery flexible.
 
+* Declarative
+    Predefined structure, easier to get started, more rigig.
