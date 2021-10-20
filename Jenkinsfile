@@ -4,7 +4,6 @@ pipeline {
         // docker { 
         //     image 'vivado:2018.3'            
         // }
-    }
     stages { // where the work happens
         stage('Checkout') {
             steps { 
