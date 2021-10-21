@@ -6,7 +6,8 @@ REPO := jenkins
 NAME := jenkins-example
 
 exist-docker-image = $(shell docker image ls | grep ${TAG} | tr -s ' ' | cut -f2 -d ' ')
-exist-docker-running = $(shell docker ps -a | grep ${TAG} | tr -s ' ' | cut -f2 -d ' ')
+exist-docker-instance = $(shell docker ps -a | grep ${TAG} | tr -s ' ' | cut -f2 -d ' ')
+exist-docker-running = $(shell docker ps -a -f name=${NAME} -f status=running)
 ip-address = $(shell hostname -i | cut -d ' ' -f1)
 
 all: 
@@ -21,7 +22,7 @@ help:
 	$(info  * log       	- Prints the docker log, necessary to visualize password)
 	$(info  * clean       	- Deletes Running Docker)
 	$(info  * clean-img     - Deletes built Docker Image)
-	$(info  * reset     	- Cleans environemnt, deleting docker image and running version of it)
+	$(info  * reset     	- Cleans environemnt, deleting docker image and instance version of it)
 	@echo ""
 
 .PHONY: build
@@ -33,7 +34,7 @@ build:
 .PHONY: run
 run: $(if $(call exist-docker-image),,build)
 	@echo "## Running Docker ##"
-	@if [ -n "$(call exist-docker-running)" ]; then \
+	@if [ -n "$(call exist-docker-instance)" ]; then \
 		echo "Docker already exists, run make clean to run new docker instance"; \
 	else \
 		docker run --name ${NAME} \
@@ -48,16 +49,23 @@ run: $(if $(call exist-docker-image),,build)
 
 .PHONY: log
 log:
-	@if [ -n "$(call exist-docker-running)" ]; then \
+	@if [ -n "$(call exist-docker-instance)" ]; then \
 		docker logs ${NAME}; \
 	else \
 		echo "First run 'make run' to run the jenkins docker"; \
 	fi
 
+.PHONY: stop
+stop:
+	@echo "## Stopping Docker ##"
+	@if [ -n "$(call exist-docker-instance)" ]; then \
+		docker stop ${NAME}; \
+	fi
+
 .PHONY: clean
-clean:
+clean: $(if $(call exist-docker-running),,stop)
 	@echo "## Removing Docker ##"
-	@if [ -n "$(call exist-docker-running)" ]; then \
+	@if [ -n "$(call exist-docker-instance)" ]; then \
 		docker rm ${NAME}; \
 	fi
 
