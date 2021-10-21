@@ -3,7 +3,7 @@
 //      Credentials Binding
 
 // Jenkins Environment variables can be found in http://localhost:8080/env-vars.html/
-def EXAMPLE_VARIABLE = getGitChanges() // example user variable calling on groovy script
+// def EXAMPLE_VARIABLE = getGitChanges() // example user variable calling on groovy script
 
 pipeline {
     // where to execute, useful in jenkins clusters where you have different machines/agents to run a job
@@ -22,7 +22,7 @@ pipeline {
     }
 
     // provides build tools for our projects such as maven, gradle, yarn and jdk
-    // check them in Global Tool Configuration
+    // check them in Manage Jenkins -> Global Tool Configuration -> Add Tool
     tools {
         maven 'Maven'
     }
