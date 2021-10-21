@@ -3,7 +3,7 @@
 //      Credentials Binding
 
 // Jenkins Environment variables can be found in http://localhost:8080/env-vars.html/
-def EXAMPLE_VARIABLE = getGitChanges() // example user variable calling on groovy script
+// def EXAMPLE_VARIABLE = getGitChanges() // example user variable calling on groovy script
 
 pipeline {
     // where to execute, useful in jenkins clusters where you have different machines/agents to run a job
@@ -14,7 +14,9 @@ pipeline {
         // }
 
     // external configurations that can be provided to a build that changes some configuration
-    // are very suitable for expressions
+    // are very suitable for expressions. 
+    // There will be a new option at the <project> -> <branch> in Jenkins besides Build. This is
+    // 'Build with Parameters', which lets us set the variables beforehand!
     parameters {
         // string(name: 'VERSION', defaultValue: '', description: 'version to deploy on prod')
         choice(name: 'VERSION', choices: ['1.1.0', '1.1.1'], description: '')
@@ -22,7 +24,7 @@ pipeline {
     }
 
     // provides build tools for our projects such as maven, gradle, yarn and jdk
-    // check them in Global Tool Configuration
+    // check them in Manage Jenkins -> Global Tool Configuration -> Add Tool
     tools {
         maven 'Maven'
     }
@@ -44,15 +46,33 @@ pipeline {
                 echo "Checkout..."
             }
         }
+        stage('Init') {
+            // groovy scripts have access to all environemt variables and paraemters from jenkins
+            steps {
+                script { // a way of writing groovy scripts or calling groovy scripts, groovy is a powerful language that can be used also in Jenkinsfiles
+                    def var = "Daniel"
+                    gv = load "scripts/helloworld.groovy"
+                    gv.hello_world()
+                }
+            }
+        }
         stage('Build') {
             steps {
                 echo "Building version ${NEW_VERSION}"
                 echo "Build..."
+                script {
+                    gv.build()
+                }
                 // mvn do things
             }
         }
 
         stage('Test') {
+            when { // example of conditional, only builds the 'Test' job if branch
+                expression {
+                    env.BRANCH_NAME == 'example_dev' && params.executeTests == true
+                }
+            }
             steps {
                 when { // example of conditional
                     expression {
@@ -67,8 +87,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "Deploy..."
-                echo "deploying with ${SERVER_CREDENTIALS}"
+                // echo "deploying with ${SERVER_CREDENTIALS}"
                 echo "deploying with version ${params.VERSION}"
+                script {
+                    gv.deploy()
+                }
                 // can also be done with wrappers like
                 // withCredentials([
                 //     usernamePassword(credentials: 'example_id', usernameVariable: USER, passwordVariable: PWD)
