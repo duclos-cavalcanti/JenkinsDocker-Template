@@ -28,6 +28,7 @@ help:
 build:
 	@echo "## Building Docker ##"
 	@docker build . -t ${TAG}:${REPO}
+	@# docker pull jenkins/jenkins:latest will be done automatically
 
 .PHONY: run
 run: $(if $(call exist-docker-image),,build)
