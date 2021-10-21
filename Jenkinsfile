@@ -46,10 +46,23 @@ pipeline {
                 echo "Checkout..."
             }
         }
+        stage('Init') {
+            // groovy scripts have access to all environemt variables and paraemters from jenkins
+            steps {
+                script { // a way of writing groovy scripts or calling groovy scripts, groovy is a powerful language that can be used also in Jenkinsfiles
+                    def var = "Daniel"
+                    gv = load "scripts/helloworld.groovy"
+                    gv.hello_world()
+                }
+            }
+        }
         stage('Build') {
             steps {
                 echo "Building version ${NEW_VERSION}"
                 echo "Build..."
+                script {
+                    gv.build()
+                }
                 // mvn do things
             }
         }
@@ -68,8 +81,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "Deploy..."
-                echo "deploying with ${SERVER_CREDENTIALS}"
+                // echo "deploying with ${SERVER_CREDENTIALS}"
                 echo "deploying with version ${params.VERSION}"
+                script {
+                    gv.deploy()
+                }
                 // can also be done with wrappers like
                 // withCredentials([
                 //     usernamePassword(credentials: 'example_id', usernameVariable: USER, passwordVariable: PWD)
