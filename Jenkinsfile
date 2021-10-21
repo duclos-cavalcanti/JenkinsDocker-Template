@@ -14,7 +14,9 @@ pipeline {
         // }
 
     // external configurations that can be provided to a build that changes some configuration
-    // are very suitable for expressions
+    // are very suitable for expressions. 
+    // There will be a new option at the <project> -> <branch> in Jenkins besides Build. This is
+    // 'Build with Parameters', which lets us set the variables beforehand!
     parameters {
         // string(name: 'VERSION', defaultValue: '', description: 'version to deploy on prod')
         choice(name: 'VERSION', choices: ['1.1.0', '1.1.1'], description: '')
@@ -53,13 +55,12 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                when { // example of conditional
-                    expression {
-                        env.BRANCH_NAME == 'example_dev' && params.executeTests == true
-                        // only builds the 'Test' job if branch
-                    }
+            when { // example of conditional, only builds the 'Test' job if branch
+                expression {
+                    env.BRANCH_NAME == 'example_dev' && params.executeTests == true
                 }
+            }
+            steps {
                 echo "Test..."
             }
         }
