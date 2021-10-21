@@ -102,3 +102,19 @@ Example Regex definition:
 ```
 Branch ends in either *dev* or *feature*.
 
+### Trigger Jenkins Automatically / Periodically
+Two ways to trigger jenkins jobs:
+
+1. `Push Notifications`
+    * Version control notifies Jenkins on new commit. (May Require to install jenkins plugin for Github / Gitea / Gitlab)
+    * In the case of Github: 
+        1. At the Github Repo in question, go to Settings->Webhooks and add a Webhook.
+        You will need a public domain to allow github to send a hook to your local server. 
+        Here are the [docs ](https://expose.sh/docs).
+        ```
+        curl -s https://expose.sh/sh/install-linux.sh | sudo bash
+        ```
+        2. Go to System Configuration -> Manage Jenkins on the Jenkins Server
+
+1. `Polling`
+    * Jenkins polls in regular intervalls.
