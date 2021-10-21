@@ -102,6 +102,19 @@ Example Regex definition:
 ```
 Branch ends in either *dev* or *feature*.
 
+### Tools
+As you develop your application, you want jenkins to build and package said application.
+For that purpose it needs tools to do so. Example pre-installed tools are:
+- Ant
+- Gradle
+- Maven
+
+One can install nodejs, npm, yarn, Docker, etc.
+
+1. Go to Jenkins -> Manage Jenkins -> Global Tool Configuration
+2. Configure the wanted plugin
+3. Change Jenkinsfiles to encorporate the plugins and their commands in their jobs.
+
 ### Trigger Jenkins Automatically / Periodically
 Two ways to trigger jenkins jobs:
 
@@ -116,5 +129,5 @@ Two ways to trigger jenkins jobs:
         ```
         2. Go to System Configuration -> Manage Jenkins on the Jenkins Server
 
-1. `Polling`
+2. `Polling`
     * Jenkins polls in regular intervalls.
