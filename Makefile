@@ -35,7 +35,8 @@ build:
 run: $(if $(call exist-docker-image),,build)
 	@echo "## Running Docker ##"
 	@if [ -n "$(call exist-docker-instance)" ]; then \
-		echo "Docker already exists, run make clean to run new docker instance"; \
+		echo "Docker already exists, either run make clean to run \
+			  new docker instance or make restart to relaunch current one"; \
 	else \
 		docker run --name ${NAME} \
 					-p 8080:8080 \
@@ -60,6 +61,13 @@ stop:
 	@echo "## Stopping Docker ##"
 	@if [ -n "$(call exist-docker-instance)" ]; then \
 		docker stop ${NAME}; \
+	fi
+
+.PHONY: restart
+restart:
+	@echo "## Restarting Docker ##"
+	@if [ -n "$(call exist-docker-instance)" ]; then \
+		docker restart ${NAME}; \
 	fi
 
 .PHONY: clean
